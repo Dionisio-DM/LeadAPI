@@ -5,6 +5,7 @@ import {
 } from "./Schemas/CampaignRequestSchema";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../database";
+import { HttpError } from "../errors/HttpError";
 
 export class CampaignsController {
   index: Handler = async (req, res, next) => {
@@ -58,7 +59,7 @@ export class CampaignsController {
         data: body,
       });
 
-      res.json({
+      res.status(201).json({
         newCampaign,
       });
     } catch (error) {
@@ -68,6 +69,16 @@ export class CampaignsController {
 
   show: Handler = async (req, res, next) => {
     try {
+      const id = +req.params.id;
+
+      const campaign = await prisma.campaign.findUnique({
+        where: { id },
+        include: { leads: true, _count: true },
+      });
+
+      if (!campaign) throw new HttpError(404, "Campaign not found!");
+
+      res.json(campaign);
     } catch (error) {
       next(error);
     }
