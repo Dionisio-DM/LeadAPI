@@ -21,15 +21,15 @@ model Group {
 }
 
 model Lead {
-  id          Int            @id @default(autoincrement())
-  name        String         @db.VarChar(255)
-  email       String         @unique @db.VarChar(255)
-  phone       String         @db.VarChar(30)
-  status      LeadStatus     @default(New)
-  createdAt   DateTime       @default(now())
-  updatedTime DateTime       @default(now())
-  groups      Group[]        @relation("GroupLeads")
-  campaigns   LeadCampaign[]
+  id        Int            @id @default(autoincrement())
+  name      String         @db.VarChar(255)
+  email     String         @unique @db.VarChar(255)
+  phone     String         @db.VarChar(30)
+  status    LeadStatus     @default(New)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now())
+  groups    Group[]        @relation("GroupLeads")
+  campaigns LeadCampaign[]
 }
 
 enum LeadStatus {
