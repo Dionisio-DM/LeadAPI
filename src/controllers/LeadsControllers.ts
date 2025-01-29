@@ -1,6 +1,9 @@
-import { Handler } from "express";
+import e, { Handler } from "express";
 import { prisma } from "../database";
-import { CreateLeadRequestSchema } from "./Schemas/LeadsRequestSchemas";
+import {
+  CreateLeadRequestSchema,
+  UpdateLeadRequestSchema,
+} from "./Schemas/LeadsRequestSchemas";
 import { HttpError } from "../errors/HttpError";
 
 export class LeadsController {
@@ -35,6 +38,19 @@ export class LeadsController {
         },
       });
       if (!lead) throw new HttpError(404, "Lead not found!");
+      res.json(lead);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  update: Handler = async (req, res, next) => {
+    try {
+      const body = UpdateLeadRequestSchema.parse(req.body);
+      const lead = await prisma.lead.update({
+        data: body,
+        where: { id: +req.params.id },
+      });
       res.json(lead);
     } catch (error) {
       next(error);
