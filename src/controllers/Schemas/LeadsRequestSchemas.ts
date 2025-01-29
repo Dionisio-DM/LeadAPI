@@ -15,7 +15,7 @@ const GetLeadsRequestSchema = z.object({
   pageSize: z.string().optional(),
   name: z.string().optional(),
   status: LeadStatusSchema.optional(),
-  sortBy: z.enum(["name", "status"]).optional(),
+  sortBy: z.enum(["name", "status", "createdAt"]).optional(),
   order: z.enum(["desc", "asc"]).optional(),
 });
 

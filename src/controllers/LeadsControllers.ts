@@ -44,7 +44,6 @@ export class LeadsController {
           page: pageNumber,
           pageSize: pageSizeNumber,
           total,
-          totalPages: Math.ceil(total / pageSizeNumber),
         },
       });
     } catch (error) {
