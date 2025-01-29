@@ -20,3 +20,9 @@ const UpdateCampaignRequestSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
 });
+
+export {
+  GetCampaignRequestSchema,
+  CreateCampaignRequestSchema,
+  UpdateCampaignRequestSchema,
+};
