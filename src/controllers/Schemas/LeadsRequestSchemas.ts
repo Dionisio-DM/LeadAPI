@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CreateLeadRequestSchema = z.object({
+const CreateLeadRequestSchema = z.object({
   name: z.string(),
   email: z.string(),
   phone: z.string(),
@@ -16,3 +16,27 @@ export const CreateLeadRequestSchema = z.object({
     ])
     .optional(),
 });
+
+const UpdateLeadRequestSchema = z
+  .object({
+    name: z.string().optional(),
+    email: z.string().optional(),
+    phone: z.string().optional(),
+    status: z
+      .enum([
+        "New",
+        "Contacted",
+        "Qualified",
+        "Converted",
+        "Unresponsive",
+        "Disqualified",
+        "Archived",
+      ])
+      .optional(),
+  })
+  .transform((data) => ({
+    ...data,
+    updatedAt: new Date(),
+  }));
+
+export { CreateLeadRequestSchema, UpdateLeadRequestSchema };
