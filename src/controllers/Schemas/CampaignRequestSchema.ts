@@ -27,14 +27,14 @@ const UpdateCampaignRequestSchema = z.object({
 const LeadCampaignStatusSchema = z.enum([
   "New",
   "Engaged",
-  "FollowUp_Scheduled",
+  "Fllowup_schedule",
   "Contacted",
   "Qualified",
+  "Disqualified",
   "Converted",
   "Unresponsive",
-  "Disqualified",
   "Re_Engaged",
-  "Opted_Out",
+  "Opted_out",
 ]);
 
 export const GetCampaignLeadsRequestSchema = z.object({
