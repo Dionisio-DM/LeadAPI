@@ -2,6 +2,7 @@ import e, { Handler } from "express";
 import {
   CreateCampaignRequestSchema,
   GetCampaignRequestSchema,
+  UpdateCampaignRequestSchema,
 } from "./Schemas/CampaignRequestSchema";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../database";
@@ -86,6 +87,21 @@ export class CampaignsController {
 
   update: Handler = async (req, res, next) => {
     try {
+      const id = +req.params.id;
+      const body = UpdateCampaignRequestSchema.parse(req.body);
+
+      const campaignExists = await prisma.campaign.findUnique({
+        where: { id },
+      });
+
+      if (!campaignExists) throw new HttpError(404, "Campaign not Found!");
+
+      const campaign = await prisma.campaign.update({
+        data: body,
+        where: { id },
+      });
+
+      res.json(campaign);
     } catch (error) {
       next(error);
     }
@@ -93,6 +109,16 @@ export class CampaignsController {
 
   delete: Handler = async (req, res, next) => {
     try {
+      const id = +req.params.id;
+      const campaignExists = await prisma.campaign.findUnique({
+        where: { id },
+      });
+
+      if (!campaignExists) throw new HttpError(404, "Campaign not Found!");
+
+      const deletedCampaign = await prisma.campaign.delete({ where: { id } });
+
+      res.json(deletedCampaign);
     } catch (error) {
       next(error);
     }
