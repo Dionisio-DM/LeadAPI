@@ -13,7 +13,7 @@ const GetCampaignRequestSchema = z.object({
 const CreateCampaignRequestSchema = z.object({
   name: z.string(),
   description: z.string(),
-  startDate: z.date().optional(),
+  startDate: z.date(),
 });
 
 const UpdateCampaignRequestSchema = z.object({

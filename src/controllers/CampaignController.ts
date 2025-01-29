@@ -1,5 +1,8 @@
 import e, { Handler } from "express";
-import { GetCampaignRequestSchema } from "./Schemas/CampaignRequestSchema";
+import {
+  CreateCampaignRequestSchema,
+  GetCampaignRequestSchema,
+} from "./Schemas/CampaignRequestSchema";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../database";
 
@@ -50,6 +53,14 @@ export class CampaignsController {
 
   create: Handler = async (req, res, next) => {
     try {
+      const body = CreateCampaignRequestSchema.parse(req.body);
+      const newCampaign = await prisma.campaign.create({
+        data: body,
+      });
+
+      res.json({
+        newCampaign,
+      });
     } catch (error) {
       next(error);
     }
