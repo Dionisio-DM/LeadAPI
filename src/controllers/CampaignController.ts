@@ -13,7 +13,7 @@ export class CampaignsController {
         pageSize = 10,
         name,
         description,
-        sortBy = "createdAt",
+        sortBy = "startDate",
         order = "desc",
       } = query;
 
