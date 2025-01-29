@@ -46,10 +46,16 @@ export class LeadsController {
 
   update: Handler = async (req, res, next) => {
     try {
+      const id = +req.params.id;
+
+      const leadExists = await prisma.lead.findUnique({ where: { id } });
+
+      if (!leadExists) throw new HttpError(404, "Lead not found!");
+
       const body = UpdateLeadRequestSchema.parse(req.body);
       const lead = await prisma.lead.update({
         data: body,
-        where: { id: +req.params.id },
+        where: { id },
       });
       res.json(lead);
     } catch (error) {
@@ -59,13 +65,13 @@ export class LeadsController {
 
   delete: Handler = async (req, res, next) => {
     try {
-      const lead = await prisma.lead.findUnique({
-        where: { id: +req.params.id },
-      });
+      const id = +req.params.id;
+
+      const lead = await prisma.lead.findUnique({ where: { id } });
+
       if (!lead) throw new HttpError(404, "Lead not found!");
-      const deletedLead = await prisma.lead.delete({
-        where: { id: +req.params.id },
-      });
+
+      const deletedLead = await prisma.lead.delete({ where: { id } });
       res.json(deletedLead);
     } catch (error) {
       next(error);
