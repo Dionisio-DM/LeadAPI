@@ -22,6 +22,10 @@ router.put("/groups/:id", groupsController.update);
 router.delete("/groups/:id", groupsController.delete);
 
 router.get("/campaigns", campaignsController.index);
+router.post("/campaigns", campaignsController.create);
+router.get("/campaigns/:id", campaignsController.show);
+router.put("/campaigns/:id", campaignsController.update);
+router.delete("/campaigns/:id", campaignsController.delete);
 
 router.get("/status", (req, res) => {
   res.json({ message: "OK" });
