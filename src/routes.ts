@@ -19,6 +19,8 @@ router.get("/groups/:id", groupsController.show);
 router.put("/groups/:id", groupsController.update);
 router.delete("/groups/:id", groupsController.delete);
 
+router.get("/campaigns", cam);
+
 router.get("/status", (req, res) => {
   res.json({ message: "OK" });
 });
