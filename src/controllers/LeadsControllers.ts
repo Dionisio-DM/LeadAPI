@@ -12,11 +12,11 @@ export class LeadsController {
   index: Handler = async (req, res, next) => {
     try {
       const query = GetLeadsRequestSchema.parse(req.query);
-
       const {
         page = "1",
         pageSize = "10",
         name,
+        status,
         sortBy = "name",
         order = "asc",
       } = query;
@@ -27,6 +27,7 @@ export class LeadsController {
       const where: Prisma.LeadWhereInput = {};
 
       if (name) where.name = { contains: name, mode: "insensitive" };
+      if (status) where.status = status;
 
       const leads = await prisma.lead.findMany({
         where,
@@ -37,13 +38,13 @@ export class LeadsController {
 
       const total = await prisma.lead.count({ where });
 
-      //const leads = await prisma.lead.findMany();
       res.json({
         data: leads,
         meta: {
           page: pageNumber,
           pageSize: pageSizeNumber,
-          count: total,
+          total,
+          totalPages: Math.ceil(total / pageSizeNumber),
         },
       });
     } catch (error) {
