@@ -29,7 +29,7 @@ export interface CreateCampaignAttibutes {
 }
 
 export interface CampaignsRepository {
-  find: (params: FindCampaignParams) => Promise<Campaign | null>;
+  find: (params: FindCampaignParams) => Promise<Campaign[]>;
   findById: (id: number) => Promise<Campaign | null>;
   count: (where: CampaignWhereParams) => Promise<number>;
   create: (attributes: CreateCampaignAttibutes) => Promise<Campaign | null>;
