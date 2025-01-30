@@ -15,7 +15,7 @@ export interface CampaignWhereParams {
 
 export interface FindCampaignParams {
   where?: CampaignWhereParams;
-  sortBy?: "name" | "createdAt" | "updatedAt";
+  sortBy?: "name" | "startDate" | "endDate";
   order?: "asc" | "desc";
   limit?: number;
   offset?: number;
