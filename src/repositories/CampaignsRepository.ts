@@ -1,41 +1,40 @@
 import { Campaign } from "@prisma/client";
 
-export interface CampaignWhereParams {
-  name?: {
-    like?: string;
-    equal?: string;
-    mode?: "default" | "insensitive";
-  };
-  description?: {
-    like?: string;
-    equal?: string;
-    mode?: "default" | "insensitive";
-  };
-}
+export type LeadCampaignStatus =
+  | "New"
+  | "Engaged"
+  | "Fllowup_schedule"
+  | "Contacted"
+  | "Qualified"
+  | "Disqualified"
+  | "Converted"
+  | "Unresponsive"
+  | "Re_Engaged"
+  | "Opted_out";
 
-export interface FindCampaignParams {
-  where?: CampaignWhereParams;
-  sortBy?: "name" | "startDate" | "endDate";
-  order?: "asc" | "desc";
-  limit?: number;
-  offset?: number;
-}
-
-export interface CreateCampaignAttibutes {
+export interface CreateCampaignAttributes {
   name: string;
   description: string;
   startDate: Date;
   endDate?: Date;
 }
 
+export interface AddLeadToCampaignAttributes {
+  campaignId: number;
+  leadId: number;
+  status: LeadCampaignStatus;
+}
+
 export interface CampaignsRepository {
-  find: (params: FindCampaignParams) => Promise<Campaign[]>;
+  find: () => Promise<Campaign[]>;
   findById: (id: number) => Promise<Campaign | null>;
-  count: (where: CampaignWhereParams) => Promise<number>;
-  create: (attributes: CreateCampaignAttibutes) => Promise<Campaign | null>;
-  update: (
+  create: (attributes: CreateCampaignAttributes) => Promise<Campaign>;
+  updateById: (
     id: number,
-    attributes: Partial<CreateCampaignAttibutes>
+    attributes: Partial<CreateCampaignAttributes>
   ) => Promise<Campaign | null>;
-  delete: (id: number) => Promise<Campaign | null>;
+  deleteById: (id: number) => Promise<Campaign | null>;
+  addLead: (attributes: AddLeadToCampaignAttributes) => Promise<void>;
+  updateLeadStatus: (attributes: AddLeadToCampaignAttributes) => Promise<void>;
+  removeLead: (campaignId: number, leadId: number) => Promise<void>;
 }

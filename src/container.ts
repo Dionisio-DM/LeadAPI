@@ -5,16 +5,19 @@ import { CampaignLeadsController } from "./controllers/CampaignLeadsController";
 import { GroupLeadsController } from "./controllers/GroupLeadsController";
 import { PrismaLeadsRepository } from "./repositories/prisma/PrismaLeadsRepository";
 import { PrismaGroupsRepository } from "./repositories/prisma/PrismaGroupsRepository";
-import { PrismaCampignsRepository } from "./repositories/prisma/PrismaCampaignsRepository";
+import { PrismaCampaignsRepository } from "./repositories/prisma/PrismaCampaignsRepository";
 
 const leadsRepository = new PrismaLeadsRepository();
 const groupsRepository = new PrismaGroupsRepository();
-const campaignsRepository = new PrismaCampignsRepository();
+const campaignsRepository = new PrismaCampaignsRepository();
 
 const leadsController = new LeadsController(leadsRepository);
 const groupsController = new GroupsController(groupsRepository);
 const campaignsController = new CampaignsController(campaignsRepository);
-const campaignLeadsController = new CampaignLeadsController();
+const campaignLeadsController = new CampaignLeadsController(
+  campaignsRepository,
+  leadsRepository
+);
 const groupLeadsController = new GroupLeadsController(
   groupsRepository,
   leadsRepository

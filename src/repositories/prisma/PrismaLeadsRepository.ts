@@ -1,4 +1,4 @@
-import { Lead } from "@prisma/client";
+import { Lead, Prisma } from "@prisma/client";
 import {
   CreateLeadAttributes,
   FindLeadsParams,
@@ -28,6 +28,7 @@ export class PrismaLeadsRepository implements LeadsRepository {
       take: params.limit,
       include: {
         groups: params.include?.groups,
+        campaigns: params.include?.campaigns,
       },
     });
   }
@@ -43,21 +44,24 @@ export class PrismaLeadsRepository implements LeadsRepository {
   }
 
   async count(where: LeadWhereParams): Promise<number> {
-    return prisma.lead.count({
-      where: {
-        name: {
-          contains: where?.name?.like,
-          equals: where?.name?.equals,
-          mode: where?.name?.mode,
-        },
-        status: where?.status,
-        groups: {
-          some: {
-            id: where?.groupId,
-          },
-        },
+    let prismaWhere: Prisma.LeadWhereInput = {
+      name: {
+        contains: where?.name?.like,
+        equals: where?.name?.equals,
+        mode: where?.name?.mode,
       },
-    });
+      status: where?.status,
+    };
+
+    if (where?.groupId) {
+      prismaWhere.groups = { some: { id: where.groupId } };
+    }
+
+    if (where?.campaignId) {
+      prismaWhere.campaigns = { some: { campaignId: where.campaignId } };
+    }
+
+    return prisma.lead.count({ where: prismaWhere });
   }
 
   async create(attributes: CreateLeadAttributes): Promise<Lead> {
