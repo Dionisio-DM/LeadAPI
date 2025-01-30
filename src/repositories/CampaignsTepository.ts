@@ -6,6 +6,11 @@ export interface CampaignWhereParams {
     equal?: string;
     mode?: "default" | "insensitive";
   };
+  description?: {
+    like?: string;
+    equal?: string;
+    mode?: "default" | "insensitive";
+  };
 }
 
 export interface FindCampaignParams {
