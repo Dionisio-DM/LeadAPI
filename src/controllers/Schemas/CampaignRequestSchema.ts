@@ -6,7 +6,7 @@ const GetCampaignRequestSchema = z.object({
   pageSize: z.string().optional(),
   name: z.string().optional(),
   description: z.string().optional(),
-  sortBy: z.enum(["name", "startDate", "updatedAt"]).optional(),
+  sortBy: z.enum(["name", "startDate", "endDate"]).optional(),
   order: z.enum(["desc", "asc"]).optional(),
 });
 
