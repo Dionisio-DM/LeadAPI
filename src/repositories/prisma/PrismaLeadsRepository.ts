@@ -17,10 +17,18 @@ export class PrismaLeadsRepository implements LeadsRepository {
           mode: params.where?.name?.mode,
         },
         status: params.where?.status,
+        groups: {
+          some: {
+            id: params.where?.groupId,
+          },
+        },
       },
       orderBy: { [params.sortBy ?? "name"]: params.order },
       skip: params.offset,
       take: params.limit,
+      include: {
+        groups: params.include?.groups,
+      },
     });
   }
 
@@ -43,6 +51,11 @@ export class PrismaLeadsRepository implements LeadsRepository {
           mode: where?.name?.mode,
         },
         status: where?.status,
+        groups: {
+          some: {
+            id: where?.groupId,
+          },
+        },
       },
     });
   }
