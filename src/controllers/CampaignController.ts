@@ -4,11 +4,14 @@ import {
   GetCampaignRequestSchema,
   UpdateCampaignRequestSchema,
 } from "./Schemas/CampaignRequestSchema";
-import { Prisma } from "@prisma/client";
-import { prisma } from "../database";
 import { HttpError } from "../errors/HttpError";
+import {
+  CampaignsRepository,
+  CampaignWhereParams,
+} from "../repositories/CampaignsRepository";
 
 export class CampaignsController {
+  constructor(private readonly campaignsRepository: CampaignsRepository) {}
   index: Handler = async (req, res, next) => {
     try {
       const query = GetCampaignRequestSchema.parse(req.query);
@@ -22,29 +25,30 @@ export class CampaignsController {
         order = "desc",
       } = query;
 
-      const pageNumber = Number(page);
-      const pageSizeNumber = Number(pageSize);
+      const limit = Number(pageSize);
+      const offset = (Number(page) - 1) * limit;
 
-      const where: Prisma.CampaignWhereInput = {};
+      const where: CampaignWhereParams = {};
 
-      if (name) where.name = { contains: name, mode: "insensitive" };
+      if (name) where.name = { like: name, mode: "insensitive" };
       if (description)
-        where.description = { contains: description, mode: "insensitive" };
+        where.description = { like: description, mode: "insensitive" };
 
-      const campaigns = await prisma.campaign.findMany({
+      const campaigns = await this.campaignsRepository.find({
         where,
-        skip: (pageNumber - 1) * pageSizeNumber,
-        take: pageSizeNumber,
-        orderBy: { [sortBy]: order },
+        limit,
+        offset,
+        order,
+        sortBy,
       });
 
-      const total = await prisma.campaign.count({ where });
+      const total = await this.campaignsRepository.count(where);
 
       res.json({
         data: campaigns,
         meta: {
-          page: pageNumber,
-          pageSize: pageSizeNumber,
+          page: Number(page),
+          pageSize: limit,
           total,
         },
       });
@@ -56,9 +60,7 @@ export class CampaignsController {
   create: Handler = async (req, res, next) => {
     try {
       const body = CreateCampaignRequestSchema.parse(req.body);
-      const newCampaign = await prisma.campaign.create({
-        data: body,
-      });
+      const newCampaign = await this.campaignsRepository.create(body);
 
       res.status(201).json({
         newCampaign,
@@ -72,10 +74,7 @@ export class CampaignsController {
     try {
       const id = +req.params.id;
 
-      const campaign = await prisma.campaign.findUnique({
-        where: { id },
-        include: { leads: true, _count: true },
-      });
+      const campaign = await this.campaignsRepository.findById(id);
 
       if (!campaign) throw new HttpError(404, "Campaign not found!");
 
@@ -90,16 +89,11 @@ export class CampaignsController {
       const id = +req.params.id;
       const body = UpdateCampaignRequestSchema.parse(req.body);
 
-      const campaignExists = await prisma.campaign.findUnique({
-        where: { id },
-      });
+      const campaignExists = await this.campaignsRepository.findById(id);
 
       if (!campaignExists) throw new HttpError(404, "Campaign not Found!");
 
-      const campaign = await prisma.campaign.update({
-        data: body,
-        where: { id },
-      });
+      const campaign = await this.campaignsRepository.update(id, body);
 
       res.json(campaign);
     } catch (error) {
@@ -110,13 +104,11 @@ export class CampaignsController {
   delete: Handler = async (req, res, next) => {
     try {
       const id = +req.params.id;
-      const campaignExists = await prisma.campaign.findUnique({
-        where: { id },
-      });
+      const campaignExists = await this.campaignsRepository.findById(id);
 
       if (!campaignExists) throw new HttpError(404, "Campaign not Found!");
 
-      const deletedCampaign = await prisma.campaign.delete({ where: { id } });
+      const deletedCampaign = await this.campaignsRepository.delete(id);
 
       res.json(deletedCampaign);
     } catch (error) {
