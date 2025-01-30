@@ -8,6 +8,7 @@ import { GroupsRepository } from "../repositories/GroupsRepository";
 
 export class GroupsController {
   constructor(private readonly groupsRepository: GroupsRepository) {}
+
   index: Handler = async (req, res, next) => {
     try {
       const groups = await this.groupsRepository.find();

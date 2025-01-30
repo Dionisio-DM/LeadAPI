@@ -12,6 +12,7 @@ import {
 
 export class CampaignsController {
   constructor(private readonly campaignsRepository: CampaignsRepository) {}
+
   index: Handler = async (req, res, next) => {
     try {
       const query = GetCampaignRequestSchema.parse(req.query);
