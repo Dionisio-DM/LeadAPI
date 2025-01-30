@@ -13,7 +13,10 @@ const leadsController = new LeadsController(leadsRepository);
 const groupsController = new GroupsController(groupsRepository);
 const campaignsController = new CampaignsController();
 const campaignLeadsController = new CampaignLeadsController();
-const groupLeadsController = new GroupLeadsController();
+const groupLeadsController = new GroupLeadsController(
+  groupsRepository,
+  leadsRepository
+);
 
 export {
   leadsRepository,
