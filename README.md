@@ -203,3 +203,8 @@ A seguir, uma visão geral dos modelos definidos no arquivo `prisma/schema.prism
 
 - **leadId & campaignId:** Chave primária composta que representa a associação entre um lead e uma campanha.
 - **status:** Status da associação (enum com valores como New, Engaged, Followup_schedule, Contacted, Qualified, Disqualified, Converted, Unresponsive, Re_Engaged, Opted_out).
+
+
+## Licença
+
+[MIT](https://choosealicense.com/licenses/mit/)
